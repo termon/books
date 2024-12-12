@@ -3,8 +3,10 @@
 namespace Tests\Unit;
 
 use App\Models\Book;
+use App\Models\Author;
 use App\Models\Category;
 use App\Services\BookService;
+use App\Services\AuthorService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase; // instead of PHPUnit\Framework\TestCase; when using factories
 
@@ -88,8 +90,7 @@ class BookServiceIntegrationTest extends TestCase
     public function test_findAll_whenOneBook_ReturnsOne(): void
     {
         // arrange
-        $model = $this->makeBookModel();
-        self::$service->create($model->toArray());
+        self::$service->create($this->makeBookModel()->toArray());
 
         // act
         $books = self::$service->findAll();
@@ -110,27 +111,23 @@ class BookServiceIntegrationTest extends TestCase
     }
 
 
-    // TBC -
     public function test_delete_whenBookExists_ReturnsTrue(): void
     {
         // arrange
-        $model = Book::factory()->make(); 
-        $book = self::$service->create($model->toArray());
+        $book = self::$service->create($this->makeBookModel()->toArray());
 
         // act
         $result = self::$service->delete($book);
 
         // assert
         $this->assertEquals(true, $result);
-
     }
 
-    // TBC --
+
     public function test_update_WhenBookExists_ReturnsUpdatedBook(): void
     {
         // arrange
-        $model = Book::factory()->make(); 
-        $book = self::$service->create($model->toArray());
+        $book = self::$service->create($this->makeBookModel()->toArray());
 
         // act
         $changes = Book::factory()->make();
@@ -141,6 +138,5 @@ class BookServiceIntegrationTest extends TestCase
         $this->assertEquals($updated->category_id, $changes->category_id);
         $this->assertEquals($updated->rating, $changes->rating);
         $this->assertEquals($updated->description, $changes->description);
-        
     }
 }
