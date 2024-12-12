@@ -21,10 +21,9 @@ class AuthorServiceIntegrationTest extends TestCase
         self::$service = app(AuthorService::class);
     }
 
-    public function test_create_whenAuthorUnique_returnsAuthor(): void
+    public function test_create_whenAuthorIsUnique_returnsAuthor(): void
     {
         // arrange
-
 
         // act
         $author = self::$service->create(Author::factory()->make()->toArray());
@@ -33,14 +32,14 @@ class AuthorServiceIntegrationTest extends TestCase
         $this->assertNotNull($author);
     }
 
-    public function test_create_whenMultipleUniqueAuthors_createsAuthors(): void
+    public function test_create_whenMultipleUniqueAuthors_returnsAuthor(): void
     {
         // arrange
 
         // act
-        $author1 = self::$service->create(Author::factory()->make(["name" => "Author1"])->toArray());
-        $author2 = self::$service->create(Author::factory()->make(["name" => "Author2"])->toArray());
-        $author3 = self::$service->create(Author::factory()->make(["name" => "Author3"])->toArray());
+        self::$service->create(Author::factory()->make(["name" => "Author1"])->toArray());
+        self::$service->create(Author::factory()->make(["name" => "Author2"])->toArray());
+        self::$service->create(Author::factory()->make(["name" => "Author3"])->toArray());
 
         $count = Author::count();
 
@@ -58,5 +57,28 @@ class AuthorServiceIntegrationTest extends TestCase
 
         // assert
         $this->assertNull($author);
+    }
+
+    public function test_find_whenAuthorExists_returnsAuthor(): void
+    {
+        // arrange
+        $author = self::$service->create(Author::factory()->make()->toArray());
+
+        // act
+        $found = self::$service->find($author->id);
+
+        // assert
+        $this->assertNotNull($found);
+    }
+
+    public function test_find_whenAuthorDoesNotExist_returnsNull(): void
+    {
+        // arrange
+
+        // act
+        $found = self::$service->find(1);
+
+        // assert
+        $this->assertNull($found);
     }
 }
