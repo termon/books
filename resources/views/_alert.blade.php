@@ -1,5 +1,5 @@
 @if (Session::get('success'))
-    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)">
+    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
         <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
             <div class="flex ">
                 <div class="px-2">
@@ -26,7 +26,7 @@
         </div>
     </div>
 @elseif (Session::get('warning'))
-    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)">
+    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
         <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
             <div class="flex ">
                 <div class="px-2">
@@ -53,7 +53,7 @@
         </div>
     </div>
 @elseif (Session::get('info'))
-    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)">
+    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
         <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
             <div class="flex ">
                 <div class="px-2">
@@ -80,7 +80,7 @@
         </div>
     </div>
 @elseif (Session::get('error'))
-    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 8000)">
+    <div class="absolute top-10 right-5 m-auto" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)">
         <div class="bg-white rounded-lg border-gray-300 border p-3 shadow-lg">
             <div class="flex ">
                 <div class="px-2">

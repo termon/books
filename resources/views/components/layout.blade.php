@@ -73,19 +73,16 @@
             </x-ui.nav.title>
 
             <x-slot:center>
-                <x-ui.nav.link active="home" href="{{ route('home') }}">Home</x-ui.nav.link>
+                <x-ui.link variant="nav" active="home" href="{{ route('home') }}">Home</x-ui.link>
 
                 @auth
-                    <x-ui.nav.link active="books.index" href="{{ route('books.index') }}">Books</x-ui.nav.link>
+                    <x-ui.link variant="nav" active="books.index" href="{{ route('books.index') }}">Books</x-ui.link>
                 @endauth
 
-                <x-ui.nav.link class="px-2" active="about" href="{{ route('about') }}">About</x-ui.nav.link>
-                <x-ui.nav.link class="px-2" active="contact" href="{{ route('contact') }}">Contact</x-ui.nav.link>
-
-                {{-- <x-ui.nav.drop label="About">
-                    <x-ui.nav.drop.link class="px-2" active="about" :href="route('about')">About</x-ui.nav.drop.link>
-                    <x-ui.nav.drop.link class="px-2" active="contact" :href="route('contact')">Contact</x-ui.nav.drop.link>
-                </x-ui.nav.drop> --}}
+                <x-ui.nav.drop label="Company">
+                    <x-ui.link variant="nav" class="px-2" active="about" :href="route('about')">About</x-ui.link>
+                    <x-ui.link variant="nav" class="px-2" active="contact" :href="route('contact')">Contact</x-ui.link>
+                </x-ui.nav.drop>
 
             </x-slot:center>
 
@@ -94,8 +91,8 @@
                     <x-slot:title>
                         @guest
                             <div class="flex items-center">
-                                <x-ui.nav.link variant="nav" href="{{ route('login') }}">Login</x-ui.nav.link>
-                                <x-ui.nav.link variant="nav" href="{{ route('register') }}">Register</x-ui.nav.link>
+                                <x-ui.link variant="nav" href="{{ route('login') }}">Login</x-ui.link>
+                                <x-ui.link variant="nav" href="{{ route('register') }}">Register</x-ui.link>
                             </div>
                         @endguest
                         @auth
@@ -107,31 +104,31 @@
                     </x-slot>
 
                     @auth
-                        <form method="post" action="{{ route('logout') }}" class="flex gap-2 p-0 m-0">
+                        <form method="post" action="{{ route('logout') }}" class="flex p-0 m-0">
                             @csrf
-                            <x-ui.nav.button type="submit">
+                            <x-ui.button variant="nav" type="submit">
                                 Logout
-                            </x-ui.nav.button>
+                            </x-ui.button>
                         </form>
                     @endauth
                 </x-ui.nav.drop> --}}
 
                 @guest
                     <div class="flex items-center">
-                        <x-ui.nav.link variant="nav" href="{{ route('login') }}">Login</x-ui.nav.link>
-                        <x-ui.nav.link variant="nav" href="{{ route('register') }}">Register</x-ui.nav.link>
+                        <x-ui.link variant="nav" href="{{ route('login') }}">Login</x-ui.link>
+                        <x-ui.link variant="nav" href="{{ route('register') }}">Register</x-ui.link>
                     </div>
                 @endguest
                 @auth
-                    <form method="post" action="{{ route('logout') }}" class="flex gap-2 p-0 m-0">
+                    <form method="post" action="{{ route('logout') }}" class="flex p-0 m-0">
                         @csrf
-                        <x-ui.nav.button type="submit">
+                        <x-ui.button variant="nav" type="submit">
                             Logout
-                        </x-ui.nav.button>
+                            <span class="text-gray-400 text-xs">
+                                {{ auth()->user()->name }}({{ auth()->user()->role }})
+                            </span>
+                        </x-ui.button>
                     </form>
-                    <span class="text-gray-400 text-xs">
-                        {{ auth()->user()->name }}({{ auth()->user()->role }})
-                    </span>
                 @endauth
             </x-slot:right>
         </x-ui.nav>

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Traits\Sortable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -43,23 +42,6 @@ class Book extends Model
         );
     }
 
-    // scope search method
-    public function scopeSearch($query, $value)
-    {
-        if ($value) {
-            return $query
-                ->where('title', 'like', "%{$value}%")
-                ->orWhere('description', 'like', "%{$value}%")
-                ->orWhere('year', 'like', "%{$value}%")
-                ->orWhere('email', 'like', "%{$value}%")
-                ->orWhereHas(
-                    'category',
-                    fn($q) =>
-                    $q->where('name', 'like', "%{$value}%")
-                );
-        }
-        return $query;
-    }
 
     // make list of authors not associated with book
     public function addAuthorBookSelectList(): array
@@ -82,17 +64,5 @@ class Book extends Model
     public function removeAuthorBookSelectList(): array
     {
         return $this->authors->pluck('name', 'id')->all();
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::deleted(function ($book) {
-            if ($book->image && Storage::disk('public')->exists($book->image)) {
-                dd("deleting", $book);
-                Storage::disk('public')->delete($book->image);
-            }
-        });
     }
 }

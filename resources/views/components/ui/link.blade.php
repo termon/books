@@ -1,4 +1,4 @@
-@props(['variant' => 'link', 'href' => '#'])
+@props(['variant' => 'link', 'href' => '#', 'active' => null])
 @php
     $classes = match ($variant) {
         'blue'
@@ -22,12 +22,13 @@
         'slink'
             => 'text-sm transition-colors font-medium                        text-gray-700 hover:text-bold hover:text-gray-900    hover:underline',
         'nav'
-            => 'transition-colors duration-300 font-medium text-gray-700 hover:text-blue-700 border-b-2 border-transparent hover:border-black hover:no-underline',
+            => 'py-2 px-4 transition-colors duration-300 text-gray-700 hover:text-gray-900 hover:rounded-md hover:font-semibold block hover:bg-gray-200 whitespace-no-wrap',
         'none' => '',
         default => throw new \Exception("No such link variant: $variant"),
     };
 @endphp
 
-<a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
+<a href="{{ $href }}"
+    {{ $attributes->merge(['class' => $classes])->class(['font-semibold' => $variant === 'nav' && Route::is($active)]) }}>
     {{ $slot }}
 </a>

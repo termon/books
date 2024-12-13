@@ -20,7 +20,7 @@
         'link'
             => 'py-1.5 px-4 text-sm transition-colors font-medium text-gray-900 hover:text-bold hover:text-black hover:underline',
         'nav'
-            => 'transition-colors duration-300 font-medium text-gray-700 hover:text-blue-700 border-b-2 border-transparent hover:border-black hover:no-underline',
+            => 'transition-colors duration-300 font-medium text-gray-700 hover:text-gray-900 hover:rounded-md hover:font-semibold block hover:bg-gray-200 whitespace-no-wrap py-2 px-4',
         'none' => '',
         default => throw new \Exception("No such button variant: $variant"),
     };
