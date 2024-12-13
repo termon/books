@@ -5,14 +5,14 @@
             <!-- custom book method to verify if there are any authors available to add -->
             @if ($book->canAddAuthor())
                 <x-ui.link variant="light" href="{{ route('authorbooks.create', $book->id) }}" class="flex gap-1 items-center">
-                    <x-ui.svg size="sm" plus />
+                    <x-ui.svg size="sm" variant="plus" />
                     <span>Add</span>
                 </x-ui.link>
             @endif
             <!-- custom book method to verify if there are any authors associated with book to remove -->
             @if ($book->canRemoveAuthor())
                 <x-ui.link variant="light" href="{{ route('authorbooks.delete', $book->id) }}" class="flex gap-1 items-center">
-                    <x-ui.svg size="sm" minus />
+                    <x-ui.svg size="sm" variant="minus" />
                     <span></span>Remove</span>
                 </x-ui.link>
             @endif

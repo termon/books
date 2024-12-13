@@ -68,7 +68,7 @@
         <!-- page navbar -->
         <x-ui.nav class="bg-slate-50">
             <x-ui.nav.title class="flex items-center">
-                <x-ui.svg book size="lg" />
+                <x-ui.svg variant="book" size="lg" />
                 <span>COM621</span>
             </x-ui.nav.title>
 

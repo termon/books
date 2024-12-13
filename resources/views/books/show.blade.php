@@ -9,7 +9,7 @@
         <h2>Book</h2>
 
         <x-ui.link variant="light" :href="route('books.index')" class="flex gap-1 items-center">
-            <x-ui.svg arrow-left size="sm" />
+            <x-ui.svg variant="arrow-left" size="sm" />
             <span>Books</span>
         </x-ui.link>
 

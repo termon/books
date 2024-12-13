@@ -2,7 +2,7 @@
     <h2>Reviews</h2>
     @can('create', App\Models\Review::class)
         <x-ui.link variant="light" href="{{ route('reviews.create', $book->id) }}" class="flex gap-1 items-center">
-            <x-ui.svg size="sm" plus />
+            <x-ui.svg size="sm" variant="plus" />
             Add
         </x-ui.link>
     @endcan
@@ -30,7 +30,7 @@
                         <!-- TBC actions -->
                         <x-ui.link variant="slink" href="{{ route('reviews.show', $review->id) }}"
                             class="flex items-center">
-                            <x-ui.svg info />
+                            <x-ui.svg variant="info" />
                             <span></span>View</span>
                         </x-ui.link>
                     </td>

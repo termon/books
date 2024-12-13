@@ -9,7 +9,7 @@
         <h1>Books</h1>
         @can('create', App\Models\Book::class)
             <x-ui.link variant="light" href="{{ route('books.create') }}" class="flex gap-1 items-center">
-                <x-ui.svg plus size="sm" />
+                <x-ui.svg variant="plus" size="sm" />
                 <span>Create </span>
             </x-ui.link>
         @endcan
@@ -48,7 +48,7 @@
                         <td>
                             <x-ui.link variant="slink" href="{{ route('books.show', $book->id) }}"
                                 class="flex gap-1 items-center">
-                                <x-ui.svg info />
+                                <x-ui.svg variant="info" />
                                 <span>View</span>
                             </x-ui.link>
                         </td>

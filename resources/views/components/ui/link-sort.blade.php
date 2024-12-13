@@ -16,11 +16,11 @@
     <span>{{ $slot }}</span>
     <a href="{{ $url }}">
         @if ($name == $sort && $direction == 'asc')
-            <x-ui.svg bars-up size="sm" />
+            <x-ui.svg variant="bars-up" size="sm" />
         @elseif ($name == $sort && $direction == 'desc')
-            <x-ui.svg bars-down size="sm" />
+            <x-ui.svg variant="bars-down" size="sm" />
         @else
-            <x-ui.svg bars size="sm" />
+            <x-ui.svg variant="bars" size="sm" />
         @endif
     </a>
 </div>
