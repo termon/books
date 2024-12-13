@@ -37,30 +37,31 @@ trait Sortable
 
         // handle relationship column in 'relation.column' format
         $explodeResult = self::explodeSortParameter($column);
-        if (! empty($explodeResult)) {
+        if (!empty($explodeResult)) {
             $relationName = $explodeResult[0];
-            $column       = $explodeResult[1];
+            $column = $explodeResult[1];
 
             // check for existence of relationship
             try {
                 $relation = $query->getRelation($relationName);
-                $query    = $this->queryJoinBuilder($query, $relation);
+                $query = $this->queryJoinBuilder($query, $relation);
             } catch (BadMethodCallException $e) {
                 throw new \Exception($relationName, 1, $e);
             } catch (\Exception $e) {
                 throw new \Exception("Non-existent relation - {$relationName}", 2, $e);
             }
-
             $model = $relation->getRelated();
-
-            // check for existence of column
-            if (Schema::connection($model->getConnectionName())->hasColumn($model->getTable(), $column)) {
-                $column = $model->getTable() . '.' . $column;
-                $query  = $query->orderBy($column, $direction);
-            } else {
-                throw new \Exception("Non-existent column - {$relationName}");
-            }
         }
+
+        // check for existence of column
+        if (Schema::connection($model->getConnectionName())->hasColumn($model->getTable(), $column)) {
+            $column = $model->getTable() . '.' . $column;
+            $query  = $query->orderBy($column, $direction);
+        } else {
+            throw new \Exception("Non-existent column - {$relationName}");
+        }
+
+
         return $query;
     }
 
