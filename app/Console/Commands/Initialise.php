@@ -37,6 +37,7 @@ class Initialise extends Command
         $this->call('optimize:clear', []);
 
         $this->info('Executing storage:link command with --force');
+        $this->call('storage:unlink');
         $this->call('storage:link', ['--force' => true]);
 
         $this->info('Delete the storage/logs/laravel.log file');
