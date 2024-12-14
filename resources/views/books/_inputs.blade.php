@@ -29,7 +29,6 @@
     <!-- display existing image if available -->
     @if ($book->image)
         <div class="w-1/3">
-            {{-- <img src="{{ $book->image }}" alt="{{ $book->title }}"> --}}
             <img src="{{ Storage::url($book->image) }}" alt="{{ $book->title }}">
         </div>
     @endif

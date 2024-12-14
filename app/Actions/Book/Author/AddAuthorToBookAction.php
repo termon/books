@@ -5,7 +5,7 @@ namespace App\Actions\Book\Author;
 use App\Models\Book;
 use App\Models\Author;
 
-class AddAuthorAction
+class AddAuthorToBookAction
 {
     /**
      * Attach author to book but only if the author is not already associated with the book

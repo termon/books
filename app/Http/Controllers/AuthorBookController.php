@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Book\Author\AddAuthorToBookAction;
+use App\Actions\Book\Author\RemoveAuthorFromBookAction;
+use App\Actions\Book\FindBookAction;
 use App\Models\Book;
 use App\Models\Author;
 use Illuminate\Http\Request;
@@ -10,13 +13,13 @@ use Illuminate\Support\Facades\Gate;
 class AuthorBookController extends Controller
 {
     // GET – display form to add author to book {id}
-    public function create($id)
+    public function create($id, FindBookAction $findBook)
     {
         if (!Gate::allows('update', Book::class)) {
             return redirect()->route('login')->with('info', 'Please Login to edit a book');
         }
 
-        $book = Book::find($id);
+        $book = $findBook->execute($id);
         if (!isset($book)) {
             return redirect()->route('books.index')
                 ->with('warning', "Book {$id} does not exist!");
@@ -30,7 +33,7 @@ class AuthorBookController extends Controller
 
 
     // POST – add author in form request to book {id}
-    public function store(int $id, Request $request)
+    public function store(int $id, Request $request, AddAuthorToBookAction $action)
     {
         if (!Gate::allows('update', Book::class)) {
             return redirect()->route('login')->with('info', 'Please Login to edit a book');
@@ -42,12 +45,11 @@ class AuthorBookController extends Controller
             ['author_id' => 'Select an author']
         );
 
-        // locate book and check authorisation
-        $book = Book::find($id);
-
-        // locate author and attach to book relationship
-        $author = Author::find($data['author_id']);
-        $book->authors()->attach($author);
+        // add author to book
+        $book = $action->execute($id, $data['author_id']);
+        if (!isset($book)) {
+            return redirect()->route('books.index')->with('warning', "Book {$id} does not exist!");
+        }
 
         // redirect to display updated book
         return redirect()->route('books.show', ['id' => $id])
@@ -55,13 +57,13 @@ class AuthorBookController extends Controller
     }
 
     // GET – display form to remove author from book {id}
-    public function delete(int $id)
+    public function delete(int $id, FindBookAction $findBook)
     {
         if (!Gate::allows('update', Book::class)) {
             return redirect()->route('login')->with('info', 'Please Login to edit a book');
         }
 
-        $book = Book::find($id);
+        $book = $findBook->execute($id);
         if (!isset($book)) {
             return redirect()->route('books.index')
                 ->with('warning', "Book {$id} does not exist!");
@@ -75,7 +77,7 @@ class AuthorBookController extends Controller
     }
 
     // DELETE – remove author in form request from book {id}
-    public function destroy(int $id, Request $request)
+    public function destroy(int $id, Request $request, RemoveAuthorFromBookAction $action)
     {
         if (!Gate::allows('update', Book::class)) {
             return redirect()->route('login')->with('info', 'Please Login to edit a book');
@@ -87,11 +89,10 @@ class AuthorBookController extends Controller
         );
 
         // locate book
-        $book = Book::find($id);
-
-        // locate author and detach from book
-        $author = Author::find($data['author_id']);
-        $book->authors()->detach($author);
+        $book = $action->execute($id, $data['author_id']);
+        if (!isset($book)) {
+            return redirect()->route('books.index')->with('warning', "Book {$id} does not exist!");
+        }
 
         // redirect to show updated book
         return redirect()->route('books.show', ['id' => $id])

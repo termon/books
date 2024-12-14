@@ -5,7 +5,7 @@ namespace App\Actions\Book\Author;
 use App\Models\Book;
 use App\Models\Author;
 
-class RemoveAuthorAction
+class RemoveAuthorFromBookAction
 {
     public function execute(int|Book|null $book, int|Author|null $author): ?Book
     {

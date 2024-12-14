@@ -17,4 +17,9 @@ class Category extends Model
     {
         return $this->hasMany(Book::class);
     }
+
+    public static function getSelectList()
+    {
+        return self::all()->pluck('name', 'id');
+    }
 }

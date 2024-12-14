@@ -7,25 +7,32 @@ use App\Models\Author;
 use App\Models\Category;
 use App\Services\BookService;
 use App\Services\AuthorService;
+use App\Actions\Book\FindBookAction;
+use App\Actions\Book\CreateBookAction;
+use App\Actions\Book\DeleteBookAction;
+use App\Actions\Book\UpdateBookAction;
+use App\Actions\Book\FindAllBooksAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase; // instead of PHPUnit\Framework\TestCase; when using factories
 
-class BookServiceIntegrationTest extends TestCase
+class BookActionIntegrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected static BookService $service;
+    private static CreateBookAction $createBook;
+    private static FindBookAction $findBook;
+    private static DeleteBookAction $deleteBook;
+    private static UpdateBookAction $updateBook;
+    private static FindAllBooksAction $findAllBooks;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$service = app(Bookservice::class);
-    }
-
-    private function makeBookModel(?Category $c = null): Book
-    {
-        $category = $c ?? Category::factory()->make();
-        return Book::factory()->make(["category" => $category]);
+        self::$createBook = new CreateBookAction();
+        self::$findBook = new FindBookAction();
+        self::$deleteBook = new DeleteBookAction();
+        self::$updateBook = new UpdateBookAction();
+        self::$findAllBooks = new FindAllBooksAction();
     }
 
     public function test_findAll_whenNoBooks_returnsNone(): void
@@ -33,7 +40,7 @@ class BookServiceIntegrationTest extends TestCase
         // arrange
 
         // act
-        $books = self::$service->findAll();
+        $books = self::$findAllBooks->execute();
 
         // assert
         $this->assertEquals(0, $books->count());
@@ -42,10 +49,10 @@ class BookServiceIntegrationTest extends TestCase
     public function test_create_returnsBook(): void
     {
         // arrange – use factory to make a book with related category
-        $model = $this->makeBookModel();
+        $model = Book::factory()->make();
 
         //act – call service with factory book model converted to array
-        $book = self::$service->create($model->toArray());
+        $book = self::$createBook->execute($model->toArray());
 
         // assert - that book attributes match factory model attributes
         $this->assertEquals($book->title, $model->title);
@@ -58,10 +65,10 @@ class BookServiceIntegrationTest extends TestCase
     public function test_create_withImage_storesImage(): void
     {
         // arrange – use factory to make a book with related category
-        $model = $this->makeBookModel();
+        $model = Book::factory()->make();
 
         //act – call service with factory book model converted to array
-        $book = self::$service->create($model->toArray());
+        $book = self::$createBook->execute($model->toArray());
 
         // assert - that book attributes match factory model attributes
         $this->assertEquals($book->title, $model->title);
@@ -74,10 +81,10 @@ class BookServiceIntegrationTest extends TestCase
     public function test_find_whenBookExists_returnsBook(): void
     {
         // arrange – use service to create a book using a factory model
-        $model = self::$service->create($this->makeBookModel()->toArray());
+        $model = self::$createBook->execute(Book::factory()->make()->toArray());
 
         //act – use service to find book
-        $book = self::$service->find($model->id);
+        $book = self::$findBook->execute($model->id);
 
         // assert - that book attributes match factory model attributes
         $this->assertEquals($book->title, $model->title);
@@ -90,10 +97,10 @@ class BookServiceIntegrationTest extends TestCase
     public function test_findAll_whenOneBook_ReturnsOne(): void
     {
         // arrange
-        self::$service->create($this->makeBookModel()->toArray());
+        self::$createBook->execute(Book::factory()->make()->toArray());
 
         // act
-        $books = self::$service->findAll();
+        $books = self::$findAllBooks->execute();
 
         // assert
         $this->assertEquals(1, $books->count());
@@ -102,9 +109,10 @@ class BookServiceIntegrationTest extends TestCase
     public function test_delete_WhenBookDoesntExist_ReturnsFalse(): void
     {
         // arrange
+        $deleteAction = new DeleteBookAction();
 
         // act
-        $result = self::$service->delete(1);
+        $result = $deleteAction->execute(1);
 
         // assert
         $this->assertEquals(false, $result);
@@ -114,10 +122,10 @@ class BookServiceIntegrationTest extends TestCase
     public function test_delete_whenBookExists_ReturnsTrue(): void
     {
         // arrange
-        $book = self::$service->create($this->makeBookModel()->toArray());
+        $book = self::$createBook->execute(Book::factory()->make()->toArray());
 
         // act
-        $result = self::$service->delete($book);
+        $result = self::$deleteBook->execute($book);
 
         // assert
         $this->assertEquals(true, $result);
@@ -127,11 +135,11 @@ class BookServiceIntegrationTest extends TestCase
     public function test_update_WhenBookExists_ReturnsUpdatedBook(): void
     {
         // arrange
-        $book = self::$service->create($this->makeBookModel()->toArray());
+        $book = self::$createBook->execute(Book::factory()->make()->toArray());
 
         // act
         $changes = Book::factory()->make();
-        $updated = self::$service->update($book, $changes->toArray());
+        $updated = self::$updateBook->execute($book, $changes->toArray());
 
         // assert
         $this->assertEquals($updated->title, $changes->title);

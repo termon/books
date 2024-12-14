@@ -5,7 +5,7 @@ namespace App\Actions\Book\Review;
 use App\Models\Book;
 use App\Models\Review;
 
-class AddReviewAction
+class CreateReviewAction
 {
     public function execute(int|Book|null $book, array $data): ?Review
     {
