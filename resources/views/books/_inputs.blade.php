@@ -24,7 +24,8 @@
 
 <div class="flex gap-2 items-start mt-2">
     <div class="w-full">
-        <x-ui.form.input label="Cover" name="image" type="file" value="{{ old('image', $book->image) }}" />
+        <x-ui.form.input label="Cover" name="imageFile" type="file"
+            value="{{ old('imageFile', $book->imageFile) }}" />
     </div>
     <!-- display existing image if available -->
     @if ($book->image)

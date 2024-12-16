@@ -9,14 +9,15 @@ use Illuminate\Http\Request;
 
 use Illuminate\Validation\Rule;
 
+use App\Actions\Book\FindBookAction;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\File;
 use App\Actions\Book\CreateBookAction;
-use App\Actions\Book\CreateBookDataAction;
 use App\Actions\Book\DeleteBookAction;
-use App\Actions\Book\FindAllBooksAction;
-use App\Actions\Book\FindBookAction;
 use App\Actions\Book\UpdateBookAction;
+use App\Actions\Book\FindAllBooksAction;
+use App\Actions\Book\CreateBookDataAction;
+use App\Actions\Book\UpdateBookDataAction;
 
 class BookController extends Controller
 {
@@ -62,23 +63,13 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, CreateBookAction $action)
+    public function store(BookData $data, CreateBookAction $action)
     {
-
+        // authorise the creation
         Gate::allows('create', Book::class);
 
-        // authorise the creation
-        $data = $request->validate([
-            'title' => ['required', 'unique:books,title'],
-            'year' => ['required', 'numeric'],
-            'category_id' => ['required'],
-            'rating' => ['required', 'numeric', 'min:0', 'max:5'],
-            'description' => ['min:0', 'max:500'],
-            'image' => ['nullable', File::types(['png', 'jpg', 'jpeg', 'webp'])->max(1024)]
-        ]);
-
         // create the book using action
-        $book = $action->execute($data);
+        $book = $action->execute($data->except('imageFile')->toArray());
         if (!$book) {
             return redirect()->route('books.index')->with('error', 'Book not created');
         }
@@ -128,19 +119,9 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, int $id, UpdateBookAction $action)
+    public function update(BookData $data, int $id, UpdateBookDataAction $action)
     {
         Gate::allows('update', Book::class);
-
-        // authorise the creation
-        $data = $request->validate([
-            'title' => ['required', Rule::unique('books')->ignore($id)],
-            'category_id' => ['required'],
-            'year' => ['required', 'numeric'],
-            'rating' => ['required', 'numeric', 'min:0', 'max:5'],
-            'description' => ['min:0', 'max:800'],
-            'image' => ['nullable', File::types(['png', 'jpg', 'jpeg', 'webp'])->max(1024)],
-        ]);
 
         // update the book using the service
         $book = $action->execute($id, $data);

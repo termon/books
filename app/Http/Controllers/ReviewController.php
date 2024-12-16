@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\AddReviewAction;
-use App\Actions\Book\Review\CreateReviewAction;
-use App\Actions\Book\Review\DeleteReviewAction;
-use App\Actions\Book\Review\FindReviewAction;
-use App\Actions\DestroyReviewAction;
-use App\Models\Book;
 use App\Models\Review;
-use App\Services\ReviewService;
-use Illuminate\Http\Request;
+use App\Data\ReviewData;
+
 use Illuminate\Support\Facades\Gate;
+use App\Actions\Book\Review\FindReviewAction;
+use App\Actions\Book\Review\DeleteReviewAction;
+use App\Actions\Book\Review\CreateReviewDataAction;
 
 class ReviewController extends Controller
 {
+    // GET /reviews/{id}
     public function show(int $id, FindReviewAction $action)
     {
         // authorise the view
@@ -29,6 +27,7 @@ class ReviewController extends Controller
         return view('reviews.show', ['review' => $review]);
     }
 
+    // GET /reviews/{id}/create
     public function create(int $id)
     {
         // verify user has authority to create a review
@@ -42,19 +41,12 @@ class ReviewController extends Controller
         return view('reviews.create', ['review' => $review]);
     }
 
-
-
+    // POST /reviews/{id}
     // store a review for the book identified by $id
-    public function store(Request $request, int $id, CreateReviewAction $action)
+    public function store(int $id, ReviewData $data, CreateReviewDataAction $action)
     {
         // authorise the creation
         Gate::authorize('create', Review::class);
-
-        $data = $request->validate([
-            'name' => ['required'],
-            'rating' => ['required', 'numeric', 'min:0', 'max:5'],
-            'comment' => ['required', 'min:0', 'max:500']
-        ]);
 
         // call action to handle review creation
         $review = $action->execute($id, $data);
@@ -65,11 +57,11 @@ class ReviewController extends Controller
         return redirect()->route('books.show', $id)->with('info', 'Review added');
     }
 
-    public function destroy(int $id, FindReviewAction $findReview, DeleteReviewAction $deleteReview)
+    // DELETE /reviews/{id}
+    public function destroy(int $id, DeleteReviewAction $deleteReview)
     {
         // authorise the creation
         Gate::authorize('delete', Review::class);
-
 
         // delete the review and return the related book
         $book = $deleteReview->execute($id);
