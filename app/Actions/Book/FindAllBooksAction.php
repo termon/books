@@ -15,6 +15,7 @@ class FindAllBooksAction
             $query =  $query->where('title', 'like', "%{$search}%")
                 ->orWhere('description', 'like', "%{$search}%")
                 ->orWhere('year', 'like', "%{$search}%")
+                ->orWhere('image', 'like', "%{$search}%")
                 ->orWhereHas(
                     'category',
                     fn($q) =>
